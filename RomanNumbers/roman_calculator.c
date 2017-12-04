@@ -58,57 +58,104 @@ int convertRoman(char* romanNumber)
 	return number;
 }
 
-void convertIntToRoman(int number, char* romanNumber, int buffersize)
+char convertIntToRoman(int nbr)
 {
-	int one = 0;
-	int five = 0;
-	int ten = 0;
-	int fifty = 0;
-	int hundred = 0;
-	int fivehundred = 0;
-	int thousand = 0;
-
-	int x = number;
-	while (x > 0)
+	char roman;
+	switch (nbr)
 	{
-		if (x / 1000 > 0)
-		{
-			thousand = x / 1000;
-			x -= thousand * 1000;
-			continue;
-		}
-		if (x / 500 > 0)
-		{
-			fivehundred = x / 500;
-			x -= fivehundred * 500;
-			continue;
-		}
-		if (x / 100 > 0)
-		{
-			hundred = x / 100;
-			x -= hundred * 100;
-			continue;
-		}
-		if (x / 50 > 0)
-		{
-			fifty = x / 50;
-			x -= fifty * 50;
-			continue;
-		}
-		if (x / 10 > 0)
-		{
-			ten = x / 10;
-			x -= ten * 10;
-			continue;
-		}
-		if (x / 5 > 0)
-		{
-			five = x / 5;
-			x -= five * 5;
-			continue;
-		}
-		one = x;
+	case 1:
+		roman = 'I';
+		break;
+	case 5:
+		roman = 'V';
+		break;
+	case 10:
+		roman = 'X';
+		break;
+	case 50:
+		roman = 'L';
+		break;
+	case 100:
+		roman = 'C';
+		break;
+	case 500:
+		roman = 'D';
+		break;
+	case 1000:
+		roman = 'M';
+		break;
+	default:
+		break;
 	}
+	return roman;
+}
+
+void convertInt(int number, char* romanNumber, int buffersize)
+{
+	int romanValues[7] = { 1000, 500, 100, 50, 10, 5, 1 };
+	int romanValuesCount[7] = { 0, 0, 0, 0, 0, 0, 0 };
+	int index = 0;
+	size_t nbrOfElements = sizeof(romanValues) / sizeof(romanValues[0]);
+	int tempNbr = number;
+
+	//calculate number of different roman numbers
+	for (int i = 0; i < nbrOfElements; i++)
+	{
+		romanValuesCount[i] = tempNbr / romanValues[i];
+		tempNbr -= romanValuesCount[i] * romanValues[i];
+	}
+
+	//create string for whole roman number
+	for (int i = 0; i < nbrOfElements; i++)
+	{
+		//IV
+		if (number % 5 == 4 && i == 6 && romanValuesCount[i + 1] != 0)
+		{
+			romanNumber[index] = 'I';
+			index++;
+			romanNumber[index] = 'V';
+			index++;
+			break;
+		}
+		//IX
+		if (number % 10 == 9 && i == 5 && romanValuesCount[i + 1] != 0)
+		{
+			romanNumber[index] = 'I';
+			index++;
+			romanNumber[index] = 'X';
+			index++;
+			break;
+		}
+		//XC
+		if (number % 100 >= 90 && i == 2 && romanValuesCount[i + 1] != 0)
+		{
+			romanNumber[index] = 'X';
+			index++;
+			romanNumber[index] = 'C';
+			index++;
+			romanValuesCount[i + 1] = 0;
+			romanValuesCount[i + 2] = 0;
+			continue;
+		}
+		//CM
+		if (number % 1000 >= 10 && i == 0 && romanValuesCount[i + 1] != 0)
+		{
+			romanNumber[index] = 'C';
+			index++;
+			romanNumber[index] = 'M';
+			index++;
+			romanValuesCount[i + 1] = 0;
+			romanValuesCount[i + 2] = 0;
+			continue;
+		}
+
+		for (int j = 0; j < romanValuesCount[i]; j++)
+		{
+			romanNumber[index] = convertIntToRoman(romanValues[i]);
+			index++;
+		}
+	}
+	romanNumber[index] = '\0';
 }
 
 void readUserInput()

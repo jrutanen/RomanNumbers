@@ -4,4 +4,5 @@
 
 int convertRomanToInt(char romanNbr);
 int convertRoman(char* romanNumber);
-void convertIntToRoman(int number, char* romanNumber, int buffersize);
+char convertIntToRoman(int nbr);
+void convertInt(int number, char* romanNumber, int buffersize);
