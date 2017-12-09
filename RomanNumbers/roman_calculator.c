@@ -58,107 +58,116 @@ int convertRoman(char* romanNumber)
 	return number;
 }
 
-char convertIntToRoman(int nbr)
+void convertInt(int number, int maxSize, char* romanNumber)
 {
-	char roman;
-	switch (nbr)
-	{
-	case 1:
-		roman = 'I';
-		break;
-	case 5:
-		roman = 'V';
-		break;
-	case 10:
-		roman = 'X';
-		break;
-	case 50:
-		roman = 'L';
-		break;
-	case 100:
-		roman = 'C';
-		break;
-	case 500:
-		roman = 'D';
-		break;
-	case 1000:
-		roman = 'M';
-		break;
-	default:
-		break;
-	}
-	return roman;
-}
-
-void convertInt(int number, char* romanNumber, int buffersize)
-{
-	int romanValues[7] = { 1000, 500, 100, 50, 10, 5, 1 };
-	int romanValuesCount[7] = { 0, 0, 0, 0, 0, 0, 0 };
-	int index = 0;
-	size_t nbrOfElements = sizeof(romanValues) / sizeof(romanValues[0]);
-	int tempNbr = number;
+	//initilize string
+	romanNumber[0] = '\0';
 
 	//calculate number of different roman numbers
-	for (int i = 0; i < nbrOfElements; i++)
-	{
-		romanValuesCount[i] = tempNbr / romanValues[i];
-		tempNbr -= romanValuesCount[i] * romanValues[i];
-	}
-
 	//create string for whole roman number
-	for (int i = 0; i < nbrOfElements; i++)
-	{
-		//IV
-		if (number % 5 == 4 && i == 6 && romanValuesCount[i + 1] != 0)
-		{
-			romanNumber[index] = 'I';
-			index++;
-			romanNumber[index] = 'V';
-			index++;
-			break;
-		}
-		//IX
-		if (number % 10 == 9 && i == 5 && romanValuesCount[i + 1] != 0)
-		{
-			romanNumber[index] = 'I';
-			index++;
-			romanNumber[index] = 'X';
-			index++;
-			break;
-		}
-		//XC
-		if (number % 100 >= 90 && i == 2 && romanValuesCount[i + 1] != 0)
-		{
-			romanNumber[index] = 'X';
-			index++;
-			romanNumber[index] = 'C';
-			index++;
-			romanValuesCount[i + 1] = 0;
-			romanValuesCount[i + 2] = 0;
-			continue;
-		}
-		//CM
-		if (number % 1000 >= 10 && i == 0 && romanValuesCount[i + 1] != 0)
-		{
-			romanNumber[index] = 'C';
-			index++;
-			romanNumber[index] = 'M';
-			index++;
-			romanValuesCount[i + 1] = 0;
-			romanValuesCount[i + 2] = 0;
-			continue;
-		}
+	int destBufferSize = maxSize;
 
-		for (int j = 0; j < romanValuesCount[i]; j++)
-		{
-			romanNumber[index] = convertIntToRoman(romanValues[i]);
-			index++;
-		}
+	if (number / 1000 > 0)
+	{
+		strcat_s(romanNumber, destBufferSize, romanNumbers[number / 1000][0]);
+		number -= (number / 1000) * 1000;
 	}
-	romanNumber[index] = '\0';
+	if (number / 100 > 0)
+	{
+		strcat_s(romanNumber, destBufferSize, romanNumbers[number / 100][1]);
+		number -= (number / 100) * 100;
+	}
+	if (number / 10 > 0)
+	{
+		strcat_s(romanNumber, destBufferSize, romanNumbers[number / 10][2]);
+		number -= (number / 10) * 10;
+	}
+	if (number > 0)
+	{
+		strcat_s(romanNumber, destBufferSize, romanNumbers[number][3]);
+	}
 }
 
-void readUserInput()
+void readUserInput(int* numberOne, int* numberTwo, char* operator)
 {
-	
+	printf("This is calculator for Roman values. Give value 1 operator and value 2.\n");
+	printf("For example: IV + V or V * V\n");
+	char userInput[100];
+
+	bool validInput = false;
+
+	while(!validInput)
+	{
+		printf("For example: IV + V or V * V\n");
+		gets(userInput);
+		validInput = checkInput(userInput);
+	}
+}
+
+int calculateResult(int numberOne, int numberTwo, char* operator)
+{
+
+}
+
+bool checkInput(char * userInput)
+{
+	char * input;
+	char **context = NULL;
+	input = strtok_s(userInput, ' ', context);
+	int indexOfInput = 0;
+	while(input != NULL)
+	{
+		//second value should be operator
+		if (indexOfInput == 1)
+		{
+			if (!isValidOperator(input))
+			{
+				return false;
+			}
+		}
+		//first and third values should be roman numbers
+		else
+		{
+			if (!isValidRomanNumber(input))
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+bool isValidRomanNumber(char * romanNumber)
+{
+	int numberLength = strlen(romanNumber);
+
+	for (int i = 0; i < numberLength; i++)
+	{
+		if (romanNumber[i] == 'I' || romanNumber[i] == 'V' || romanNumber[i] == 'X' \
+			|| romanNumber[i] == 'L' || romanNumber[i] == 'C' || romanNumber[i] == 'D' \
+			|| romanNumber[i] == 'M')
+		{
+			//do nothing
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool isValidOperator(char * operator)
+{
+	if (strlen(operator) > 1)
+	{
+		return false;
+	}
+
+    if (operator[0] == '+' || operator[0] == '-' || operator[0] == '/' \
+	    || operator[0] == '*' || operator[0] == '^' || operator[0] == '%')
+	{
+		return true;
+	}
+	return false;
 }

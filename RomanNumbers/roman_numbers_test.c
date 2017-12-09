@@ -1,4 +1,16 @@
-// roman_numbers_test.c
+/**
+* \brief Tests to verifty the roman numbers functions
+*
+* \author (last to touch it) $Author: Jani $
+*
+* \version $Revision: 0.1 $
+*
+* \date $Date: 2017/12/09 $
+*
+* Contact: https://github.com/jrutanen
+*
+* Created on: Sat Dec 9 2017
+*/
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -6,6 +18,7 @@
 
 #include "roman_calculator.h"
 
+///Test that the covertRoman function works as expected
 static void test_convertRoman()
 {
 	char *testNumber = "VI";
@@ -18,6 +31,7 @@ static void test_convertRoman()
 	printf("test_convertRoman passed\n");
 }
 
+///Test that the covertRomanToInt function works as expected
 static void test_convertRomanToInt()
 {
 	assert(convertRomanToInt('I') == 1);
@@ -30,30 +44,87 @@ static void test_convertRomanToInt()
 	printf("test_convertRomanToInt passed\n");
 }
 
+///Test that the covertIntToRoman function works as expected
 static void test_convertIntToRoman()
 {
 	char result[100];
+	//length of the string reserved for the roman number
+	int maxLength = 100;
 	result[99] = '\0';
-	int length = strlen(result);
-	convertInt(6, result, 3);
-	length = strlen(result);
-//	assert(strcmp("VI", result) == 0);
-	convertInt(4, result, 3);
-	length = strlen(result);
-//	assert(strcmp("IV", result) == 0);
-	convertInt(89, result, 3);
-	length = strlen(result);
-//	assert(strcmp("LXXXIX", result) == 0);
-	convertInt(1593, result, 3);
-//	assert(strcmp("MDXCIII", result) == 0);
-	convertInt(199, result, 3);
-//	assert(strcmp("CXCIX", result) == 0);
-	printf("test_convertIntToRoman passed\n");
+
+	char * expectedResult = NULL;
+
+	convertInt(6, maxLength, result);
+	realloc(expectedResult, sizeof(char) * 100);
+	expectedResult = "VI\0";
+	assert(strcmp(expectedResult, result) == 0);
+	convertInt(4, maxLength, result);
+	expectedResult = "IV\0";
+	assert(strcmp(expectedResult, result) == 0);
+	convertInt(40, maxLength, result);
+	expectedResult = "XL\0";
+	assert(strcmp(expectedResult, result) == 0);
+	convertInt(89, maxLength, result);
+	expectedResult = "LXXXIX\0";
+	assert(strcmp(expectedResult, result) == 0);
+	convertInt(1593, maxLength, result);
+	expectedResult = "MDXCIII\0";
+	assert(strcmp(expectedResult, result) == 0);
+	convertInt(199, maxLength, result);
+	expectedResult = "CXCIX\0";
+	assert(strcmp(expectedResult, result) == 0);
+	convertInt(499, maxLength, result);
+	expectedResult = "CDXCIX\0";
+	assert(strcmp(expectedResult, result) == 0);
 	
+	printf("test_convertIntToRoman passed\n");	
 }
+
+static void test_isValidRomanNumber()
+{
+	char * input = NULL;
+	realloc(input, sizeof(char) * 100);
+	input = "ABC\0";
+	assert(isValidRomanNumber(input) == false);
+	input = "XIVCDMG\0";
+	assert(isValidRomanNumber(input) == false);
+	input = "XIVCDM\0";
+	assert(isValidRomanNumber(input) == true);
+	input = "MDCLXVI\0";
+	assert(isValidRomanNumber(input) == true);
+	input = "-IX\0";
+	assert(isValidRomanNumber(input) == false);
+
+	printf("test_isValidRomanNumber passed\n");
+}
+static void test_isValidOperator()
+{
+	char * input = NULL;
+	realloc(input, sizeof(char) * 100);
+	input = "+\0";
+	assert(isValidOperator(input) == true);
+	input = "-\0";
+	assert(isValidOperator(input) == true);
+	input = "*\0";
+	assert(isValidOperator(input) == true);
+	input = "/\0";
+	assert(isValidOperator(input) == true);
+	input = "^\0";
+	assert(isValidOperator(input) == true);
+	input = "%\0";
+	assert(isValidOperator(input) == true);
+	input = "x\0";
+	assert(isValidOperator(input) == false);
+	input = "**\0";
+	assert(isValidOperator(input) == false);
+
+	printf("test_isValidOperator passed\n");
+}
+
 int main() {
 	test_convertRomanToInt();
 	test_convertRoman();
 	test_convertIntToRoman();
-
+	test_isValidOperator();
+	test_isValidRomanNumber();
 }
