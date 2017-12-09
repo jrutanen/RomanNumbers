@@ -15,8 +15,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "roman_calculator.h"
+#include "ui.h"
 
 ///Test that the covertRoman function works as expected
 static void test_convertRoman()
@@ -121,10 +123,29 @@ static void test_isValidOperator()
 	printf("test_isValidOperator passed\n");
 }
 
+static void test_checkInput()
+{
+	char * input = NULL;
+	realloc(input, sizeof(char) * 100);
+	input = "12 + IX\0";
+	assert(checkInput(input) == false);
+	input = "I - II\0";
+	assert(checkInput(input) == true);
+	input = "II * GX\0";
+	assert(checkInput(input) == false);
+	input = "IV / IV\0";
+	assert(checkInput(input) == true);
+	input = "IX^LX\0";
+	assert(checkInput(input) == false);
+
+	printf("test_checkInput passed\n");
+
+}
 int main() {
 	test_convertRomanToInt();
 	test_convertRoman();
 	test_convertIntToRoman();
 	test_isValidOperator();
 	test_isValidRomanNumber();
+	test_checkInput();
 }

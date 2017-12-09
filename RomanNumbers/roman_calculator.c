@@ -1,3 +1,18 @@
+/**
+* \brief Functions to convert roman numbers to arabic numbers
+*        and vice versa
+*
+* \author (last to touch it) $Author: Jani $
+*
+* \version $Revision: 0.1 $
+*
+* \date $Date: 2017/12/09 $
+*
+* Contact: https://github.com/jrutanen
+*
+* Created on: Sat Dec 9 2017
+*/
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -58,7 +73,7 @@ int convertRoman(char* romanNumber)
 	return number;
 }
 
-void convertInt(int number, int maxSize, char* romanNumber)
+void convertInt(int number, int maxSize, char *romanNumber)
 {
 	//initilize string
 	romanNumber[0] = '\0';
@@ -88,86 +103,36 @@ void convertInt(int number, int maxSize, char* romanNumber)
 	}
 }
 
-void readUserInput(int* numberOne, int* numberTwo, char* operator)
+int calculateResult(int numberOne, int numberTwo, char operator)
 {
-	printf("This is calculator for Roman values. Give value 1 operator and value 2.\n");
-	printf("For example: IV + V or V * V\n");
-	char userInput[100];
-
-	bool validInput = false;
-
-	while(!validInput)
+	switch (operator)
 	{
-		printf("For example: IV + V or V * V\n");
-		gets(userInput);
-		validInput = checkInput(userInput);
+		case '+':
+			return (numberOne + numberTwo);
+		case '-':
+			return (numberOne - numberTwo);
+		case '*':
+			return (numberOne * numberTwo);
+		case '/':
+			return (numberOne / numberTwo);
+		case '^':
+			return (numberOne ^ numberTwo);
+		case '%':
+			return (numberOne % numberTwo);
+		default:
+			break;
 	}
+	return 0;
 }
 
-int calculateResult(int numberOne, int numberTwo, char* operator)
+void calculate(char* numberOne, char* numberTwo, char operator, char* result)
 {
-
-}
-
-bool checkInput(char * userInput)
-{
-	char * input;
-	char **context = NULL;
-	input = strtok_s(userInput, ' ', context);
-	int indexOfInput = 0;
-	while(input != NULL)
-	{
-		//second value should be operator
-		if (indexOfInput == 1)
-		{
-			if (!isValidOperator(input))
-			{
-				return false;
-			}
-		}
-		//first and third values should be roman numbers
-		else
-		{
-			if (!isValidRomanNumber(input))
-			{
-				return false;
-			}
-		}
-	}
-	return true;
-}
-
-bool isValidRomanNumber(char * romanNumber)
-{
-	int numberLength = strlen(romanNumber);
-
-	for (int i = 0; i < numberLength; i++)
-	{
-		if (romanNumber[i] == 'I' || romanNumber[i] == 'V' || romanNumber[i] == 'X' \
-			|| romanNumber[i] == 'L' || romanNumber[i] == 'C' || romanNumber[i] == 'D' \
-			|| romanNumber[i] == 'M')
-		{
-			//do nothing
-		}
-		else
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-bool isValidOperator(char * operator)
-{
-	if (strlen(operator) > 1)
-	{
-		return false;
-	}
-
-    if (operator[0] == '+' || operator[0] == '-' || operator[0] == '/' \
-	    || operator[0] == '*' || operator[0] == '^' || operator[0] == '%')
-	{
-		return true;
-	}
-	return false;
+	//initilize result string to empty string
+	result[0] = '\0';
+	int maxSize = 100;
+	int calcResult = calculateResult(convertRoman(numberOne), convertRoman(numberTwo), operator);
+//	char *resultInRoman;
+//	resultInRoman = malloc(sizeOf(resultInRoman[0]) * 100);
+	convertInt(calcResult, maxSize, result);
+//	strcpy_s(result, 99 * sizeof(char), resultInRoman);
 }

@@ -1,5 +1,6 @@
 /**
-* \brief Tests to verify the roman numbers functions
+* \brief Functions to convert roman numbers to arabic numbers
+*        and vice versa
 *
 * \author (last to touch it) $Author: Jani $
 *
@@ -11,6 +12,7 @@
 *
 * Created on: Sat Dec 9 2017
 */
+
 #pragma once
 #ifndef ROMAN_CALCULATOR_H
 #define ROMAN_CALCULATOR_H
@@ -61,47 +63,23 @@ void convertInt(int number, int maxSize, char* romanNumber);
 /**
 * reads two roman numbers as user input
 *
-* @param[out] int*	numberOne
-* @param[out] int*  numberTwo
-* @param[out] char* operator, operation user wants to perform (*, /, +, -)
-*/
-void readUserInput(int* numberOne, int* numberTwo, char* operator);
-
-/**
-* reads two roman numbers as user input
-*
 * @param[out] char*	operator, operation to perform (*, /, +, -)
 * @param[in]  int	numberOne
 * @param[in]  int   numberTwo
 * \return     int   result of the calculation
 */
-int calculateResult(int numberOne, int numberTwo, char* operator);
+int calculateResult(int numberOne, int numberTwo, char operator);
 
 /**
-* Control validity of the user input. Input needs to be in following format:
-* <romanNumber> <operator> <romanNumber>
-* Function checks valid letters for roman numbers and checks that the operator
-* is valid (*, /, +, -, ^, %)
+* Takes two roman number and the operator for calculation and performs
+* the calculation. This is the only function you should call from 
+* external file.
 *
-* @param[in]  char*	user input
-* \return     bool  True if input is valid, false otherwise
+* @param[out] char*	result as a string of roman numbers
+* @param[in]  char*	first roman number as a string
+* @param[in]  char* second roman number as a string
+* @param[in]  char  operator (+, -, *, /, ^, %)
 */
-bool checkInput(char* userInput);
-
-/**
-* * Function checks valid letters for the operator (*, /, +, -, ^, %)
-*
-* @param[in]  char*	user input
-* \return     bool  True if input is valid, false otherwise
-*/
-bool isValidOperator(char * operator);
-
-/**
-* * Function checks valid letters for the roman number (I, V, X, L, C, D, M)
-*
-* @param[in]  char*	user input
-* \return     bool  True if input is valid, false otherwise
-*/
-bool isValidRomanNumber(char* romanNumber);
+void calculate(char* numberOne, char* numberTwo, char operator, char* result);
 
 #endif //ROMAN_CALCULATOR_H

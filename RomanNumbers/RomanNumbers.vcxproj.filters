@@ -15,15 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="roman_numbers_test.c">
+    <ClCompile Include="roman_calculator.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="roman_calculator.c">
+    <ClCompile Include="ui.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="roman_calculator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
